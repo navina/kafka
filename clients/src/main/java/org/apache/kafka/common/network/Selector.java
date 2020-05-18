@@ -1144,6 +1144,8 @@ public class Selector implements Selectable, AutoCloseable {
 
         private Meter createMeter(Metrics metrics, String groupName, Map<String, String> metricTags,
                 SampledStat stat, String baseName, String descriptiveName) {
+            // Reason for using intern here: These strings are very repetitive and can lead to 10K+ identical objects in
+            // memory. They also low QPS (access). Hence, it is ok to intern() them.
             MetricName rateMetricName = metrics.metricName((baseName + "-rate").intern(), groupName,
                             String.format("The number of %s per second", descriptiveName).intern(), metricTags);
             MetricName totalMetricName = metrics.metricName((baseName + "-total").intern(), groupName,
