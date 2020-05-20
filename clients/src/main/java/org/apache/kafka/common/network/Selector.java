@@ -1027,6 +1027,7 @@ public class Selector implements Selectable, AutoCloseable {
 
     private class SelectorMetrics implements AutoCloseable {
         private final Metrics metrics;
+        private final String metricGrpPrefix;
         private final Map<String, String> metricTags;
         private final boolean metricsPerConnection;
         private final String metricGrpName;
@@ -1052,6 +1053,7 @@ public class Selector implements Selectable, AutoCloseable {
 
         public SelectorMetrics(Metrics metrics, String metricGrpPrefix, Map<String, String> metricTags, boolean metricsPerConnection) {
             this.metrics = metrics;
+            this.metricGrpPrefix = metricGrpPrefix;
             this.metricTags = metricTags;
             this.metricsPerConnection = metricsPerConnection;
             this.metricGrpName = metricGrpPrefix + "-metrics";
