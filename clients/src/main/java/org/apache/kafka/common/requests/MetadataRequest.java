@@ -79,8 +79,12 @@ public class MetadataRequest extends AbstractRequest {
             return data.topics() == null;
         }
 
+        // Used for testing only
         public List<String> topics() {
-            List<String> topicList = new ArrayList<>();
+            if (data.topics() == null) {
+                return Collections.emptyList();
+            }
+            List<String> topicList = new ArrayList<>(data.topics().size());
             for (MetadataRequestData.MetadataRequestTopic mdTopic: data.topics()) {
                 topicList.add(mdTopic.name());
             }

@@ -1206,7 +1206,7 @@ class KafkaApis(val requestChannel: RequestChannel,
     trace("Sending topic metadata %s and brokers %s for correlation id %d to client %s".format(completeTopicMetadata.mkString(","),
       brokers.mkString(","), request.header.correlationId, request.header.clientId))
 
-    val brokersJava: java.util.List[Node] = new util.ArrayList[Node](brokers.length)
+    val brokersJava: java.util.List[Node] = new java.util.ArrayList[Node](brokers.length)
       for (b <- brokers) {
         val n = b.getNode(request.context.listenerName)
         if (n != null && n.isDefined) {
