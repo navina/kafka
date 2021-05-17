@@ -128,16 +128,10 @@ class MetadataCache(brokerId: Int) extends Logging {
       Option(result)
   }
 
-  private def getAliveEndpoint(snapshot: MetadataSnapshot, brokerId: Int, listenerName: ListenerName): Option[Node] = {
+  private def getAliveEndpoint(snapshot: MetadataSnapshot, brokerId: Int, listenerName: ListenerName): Option[Node] =
     // Returns None if broker is not alive or if the broker does not have a listener named `listenerName`.
     // Since listeners can be added dynamically, a broker with a missing listener could be a transient error.
-    val listenerMap = snapshot.aliveNodes.get(brokerId)
-    if (listenerMap.isDefined && listenerMap.get.contains(listenerName)) {
-      listenerMap.get.get(listenerName)
-    } else {
-      None
-    }
-  }
+    snapshot.aliveNodes.get(brokerId).flatMap(_.get(listenerName))
 
   // errorUnavailableEndpoints exists to support v0 MetadataResponses
   def getTopicMetadata(topics: Set[String], listenerName: ListenerName, errorUnavailableEndpoints: Boolean = false,
