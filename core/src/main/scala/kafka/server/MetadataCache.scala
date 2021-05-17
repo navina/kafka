@@ -60,15 +60,12 @@ class MetadataCache(brokerId: Int) extends Logging {
   // filterUnavailableEndpoints exists to support v0 MetadataResponses
   private def getEndpoints(snapshot: MetadataSnapshot, brokers: Iterable[java.lang.Integer], listenerName: ListenerName, filterUnavailableEndpoints: Boolean): Seq[Node] = {
     val result = new mutable.ArrayBuffer[Node](math.min(snapshot.aliveBrokers.size, brokers.size))
-    for (brokerId <- brokers) {
-      val endpoint = getAliveEndpoint(snapshot, brokerId, listenerName)
-      if (endpoint.isDefined) {
-        result += endpoint.get
-      } else {
-        if (!filterUnavailableEndpoints) {
-          result += new Node(brokerId, "", -1)
-        }
+    brokers.foreach { brokerId =>
+      val endpoint = getAliveEndpoint(snapshot, brokerId, listenerName) match {
+        case None => if (!filterUnavailableEndpoints) Some(new Node(brokerId, "", -1)) else None
+        case Some(node) => Some(node)
       }
+      endpoint.foreach(result +=)
     }
     result
   }
